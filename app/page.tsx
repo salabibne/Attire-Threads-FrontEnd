@@ -1,6 +1,6 @@
 import Navbar from "@/components/Navbar";
 import Banner from "@/components/Banner";
-import NewArrivals from "@/components/NewArrivals";
+import PromoCollection from "@/components/PromoCollection";
 
 export default function Home() {
   return (
@@ -8,8 +8,8 @@ export default function Home() {
       <Navbar />
       <main>
         <Banner />
-        <NewArrivals />
-        
+        <PromoCollection />
+
         {/* Footer placeholder */}
         <footer className="bg-gray-50 py-12 border-t border-gray-100">
           <div className="max-w-7xl mx-auto px-4 text-center">
