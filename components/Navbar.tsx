@@ -218,8 +218,8 @@ const Navbar = () => {
               ) : categories.length === 0 ? (
                 <div className="text-gray-400 text-sm">No categories</div>
               ) : (
-                testCategories.map((category) => (
-                  <div key={category.id} className="relative group flex items-center">
+                testCategories.map((category, index) => (
+                  <div key={`${category.id}-${index}`} className="relative group flex items-center">
                     <button className="text-primary-brown font-medium text-sm md:text-base hover:text-opacity-80 transition-colors uppercase py-1 border-b-2 border-transparent hover:border-[#490D27]">
                       {category.name}
                     </button>

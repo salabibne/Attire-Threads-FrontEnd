@@ -1,6 +1,7 @@
 "use client"
 import React, { useState, useEffect, useCallback, useRef } from "react"
 import Image from "next/image"
+import Link from "next/link"
 import axios from "axios"
 
 interface Product {
@@ -45,7 +46,7 @@ const PromoCollection = () => {
   const observer = useRef<IntersectionObserver | null>(null)
 
   const lastProductElementRef = useCallback(
-    (node: HTMLDivElement) => {
+    (node: HTMLElement | null) => {
       if (loading) return
       if (observer.current) observer.current.disconnect()
       observer.current = new IntersectionObserver((entries) => {
@@ -92,10 +93,11 @@ const PromoCollection = () => {
                 collectionIndex === collections.length - 1 &&
                 productIndex === collection.products.length - 1
               return (
-                <div
+                <Link
+                  href={`/product/${product.id}`}
                   key={product.id}
                   ref={isLastElement ? lastProductElementRef : null}
-                  className="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300 border border-gray-100 overflow-hidden group"
+                  className="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300 border border-gray-100 overflow-hidden group cursor-pointer"
                 >
                   <figure className="relative h-72 overflow-hidden">
                     <Image
@@ -127,11 +129,11 @@ const PromoCollection = () => {
                     </div>
                     <div className="card-actions mt-4">
                       <button className="btn btn-outline btn-primary w-full border-2 hover:bg-[#543441] hover:border-[#543441]">
-                        ADD TO CART
+                        VIEW DETAILS
                       </button>
                     </div>
                   </div>
-                </div>
+                </Link>
               )
             })}
           </div>
