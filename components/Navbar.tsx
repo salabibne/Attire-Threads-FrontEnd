@@ -7,6 +7,7 @@ import axios from "axios";
 import { IoIosCall, IoIosSearch, IoIosArrowDown, IoMdMenu, IoMdClose } from "react-icons/io";
 import { FaShoppingCart, FaUser, FaInfoCircle, FaCommentAlt, FaExchangeAlt, FaRegHeart } from "react-icons/fa";
 import { MdTranslate } from "react-icons/md";
+import { useAuth } from "@/context/AuthContext";
 
 interface Subcategory {
   id: string;
@@ -28,6 +29,7 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
+  const { user, logout } = useAuth();
 
   const toggleCategory = (id: string) => {
     setExpandedCategories(prev =>
@@ -87,7 +89,19 @@ const Navbar = () => {
             {/* Top Row: Utility Links */}
             <div className="flex justify-end items-center mb-6">
               <div className="flex items-center space-x-6">
-                <Link href="/login" className="text-primary-brown text-sm font-medium hover:text-[#490D27] transition-colors">Login</Link>
+                {user ? (
+                  <>
+                    <span className="text-primary-brown text-sm font-medium">Hi, {user?.name}</span>
+                    <button
+                      onClick={logout}
+                      className="text-primary-brown text-sm font-medium hover:text-[#490D27] transition-colors cursor-pointer"
+                    >
+                      Logout
+                    </button>
+                  </>
+                ) : (
+                  <Link href="/login" className="text-primary-brown text-sm font-medium hover:text-[#490D27] transition-colors">Login</Link>
+                )}
                 <Link href="/about" className="text-primary-brown text-sm font-medium hover:text-[#490D27] transition-colors">About us</Link>
                 <Link href="/complain" className="text-primary-brown text-sm font-medium hover:text-[#490D27] transition-colors">Complain</Link>
                 <Link href="/compare" className="text-primary-brown text-sm font-medium hover:text-[#490D27] transition-colors">Compare</Link>
@@ -174,9 +188,6 @@ const Navbar = () => {
                 {/* Translator Icon */}
                 <div className="relative group cursor-pointer bg-[#490D27]/5 p-3 rounded-full hover:bg-[#490D27]/10 transition-all duration-300">
                   <MdTranslate className="text-2xl text-[#490D27]" />
-                  <span className="absolute -top-12 left-1/2 -translate-x-1/2 bg-[#490D27] text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                    Translate
-                  </span>
                 </div>
 
                 {/* Wishlist Icon */}
@@ -185,9 +196,6 @@ const Navbar = () => {
                   <span className="absolute -top-1 -right-1 bg-[#490D27] text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-bold shadow-sm">
                     0
                   </span>
-                  <span className="absolute -top-12 left-1/2 -translate-x-1/2 bg-[#490D27] text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                    Wishlist
-                  </span>
                 </div>
 
                 {/* Cart Icon */}
@@ -195,9 +203,6 @@ const Navbar = () => {
                   <FaShoppingCart className="text-2xl text-[#490D27]" />
                   <span className="absolute -top-1 -right-1 bg-[#490D27] text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-bold shadow-sm">
                     0
-                  </span>
-                  <span className="absolute -top-12 left-1/2 -translate-x-1/2 bg-[#490D27] text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                    Cart
                   </span>
                 </div>
 
@@ -352,8 +357,25 @@ const Navbar = () => {
               <FaUser className="text-xl text-[#490D27]" />
             </div>
             <div className="flex flex-col">
-              <span className="text-primary-brown font-medium">Guest User</span>
-              <Link href="/login" className="text-[#490D27] text-sm hover:underline" onClick={() => setIsMobileMenuOpen(false)}>Login / Register</Link>
+              {user ? (
+                <>
+                  <span className="text-primary-brown font-medium">{user.name}</span>
+                  <button
+                    onClick={() => {
+                      logout();
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="text-[#490D27] text-sm hover:underline text-left"
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <>
+                  <span className="text-primary-brown font-medium">Guest User</span>
+                  <Link href="/login" className="text-[#490D27] text-sm hover:underline" onClick={() => setIsMobileMenuOpen(false)}>Login / Register</Link>
+                </>
+              )}
             </div>
           </div>
 

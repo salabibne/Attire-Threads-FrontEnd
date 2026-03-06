@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Ubuntu, Geist, Geist_Mono } from "next/font/google";
+import Navbar from "@/components/Navbar";
+import { AuthProvider } from "@/context/AuthContext";
 import "./globals.css";
 
 const ubuntu = Ubuntu({
@@ -33,7 +35,10 @@ export default function RootLayout({
       <body
         className={`${ubuntu.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <AuthProvider>
+          <Navbar />
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );
