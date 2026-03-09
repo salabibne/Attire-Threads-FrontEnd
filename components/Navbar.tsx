@@ -8,6 +8,7 @@ import { IoIosCall, IoIosSearch, IoIosArrowDown, IoMdMenu, IoMdClose } from "rea
 import { FaShoppingCart, FaUser, FaInfoCircle, FaCommentAlt, FaExchangeAlt, FaRegHeart } from "react-icons/fa";
 import { MdTranslate } from "react-icons/md";
 import { useAuth } from "@/context/AuthContext";
+import { useCart } from "@/context/CartContext";
 
 interface Subcategory {
   id: string;
@@ -30,6 +31,7 @@ const Navbar = () => {
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
   const { user, logout } = useAuth();
+  const { totalItems } = useCart();
 
   const toggleCategory = (id: string) => {
     setExpandedCategories(prev =>
@@ -199,12 +201,12 @@ const Navbar = () => {
                 </div>
 
                 {/* Cart Icon */}
-                <div className="relative group cursor-pointer bg-[#490D27]/5 p-3 rounded-full hover:bg-[#490D27]/10 transition-all duration-300">
+                <Link href="/cart" className="relative group cursor-pointer bg-[#490D27]/5 p-3 rounded-full hover:bg-[#490D27]/10 transition-all duration-300">
                   <FaShoppingCart className="text-2xl text-[#490D27]" />
                   <span className="absolute -top-1 -right-1 bg-[#490D27] text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-bold shadow-sm">
-                    0
+                    {totalItems}
                   </span>
-                </div>
+                </Link>
 
                 {/* New Arrival Button */}
                 <Link
@@ -296,12 +298,12 @@ const Navbar = () => {
                 </span>
               </div>
 
-              <div className="relative p-2 text-[#490D27] hover:bg-[#490D27]/5 rounded-full transition-colors cursor-pointer">
+              <Link href="/cart" className="relative p-2 text-[#490D27] hover:bg-[#490D27]/5 rounded-full transition-colors cursor-pointer">
                 <FaShoppingCart className="text-2xl" />
                 <span className="absolute top-0 right-0 bg-[#490D27] text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
-                  0
+                  {totalItems}
                 </span>
-              </div>
+              </Link>
 
               {/* New Arrival Button (Mobile) */}
               <Link

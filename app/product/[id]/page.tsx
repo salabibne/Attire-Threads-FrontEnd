@@ -4,6 +4,7 @@ import React, { useState, useEffect, useMemo } from "react"
 import { useParams } from "next/navigation"
 import Image from "next/image"
 import axios from "axios"
+import { useCart } from "@/context/CartContext"
 
 interface VariantImage {
     id: string
@@ -55,11 +56,13 @@ const ProductDetails = () => {
     const [product, setProduct] = useState<Product | null>(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
+    const { addToCart } = useCart()
 
     // Selection states
     const [selectedColor, setSelectedColor] = useState<string | null>(null)
     const [selectedSize, setSelectedSize] = useState<string | null>(null)
     const [mainImage, setMainImage] = useState<string | null>(null)
+    const [quantity, setQuantity] = useState(1)
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -69,6 +72,7 @@ const ProductDetails = () => {
                 setSelectedColor(null)
                 setSelectedSize(null)
                 setMainImage(null)
+                setQuantity(1)
 
                 const response = await axios.get<ApiResponse>(`http://localhost:3000/v1/product/${id}`)
                 const productData = response.data.data
@@ -154,6 +158,12 @@ const ProductDetails = () => {
             ...(product.defaultImagesGallery?.slice(0, 3) || [])
         ].filter(img => img)
     }, [product, selectedVariant])
+
+    const handleAddToCart = async () => {
+        if (selectedSku) {
+            await addToCart(selectedSku.id, quantity)
+        }
+    }
 
     if (loading) {
         return (
@@ -279,6 +289,26 @@ const ProductDetails = () => {
                                 ))}
                             </div>
                         </div>
+
+                        {/* Quantity Selection */}
+                        <div className="flex items-center space-x-6">
+                            <h3 className="text-sm font-bold text-gray-900 uppercase">Quantity</h3>
+                            <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden">
+                                <button
+                                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                                    className="px-4 py-2 bg-gray-50 hover:bg-gray-100 text-gray-600 transition-colors"
+                                >
+                                    -
+                                </button>
+                                <span className="px-6 py-2 font-semibold text-gray-900">{quantity}</span>
+                                <button
+                                    onClick={() => setQuantity(quantity + 1)}
+                                    className="px-4 py-2 bg-gray-50 hover:bg-gray-100 text-gray-600 transition-colors"
+                                >
+                                    +
+                                </button>
+                            </div>
+                        </div>
                     </div>
 
                     <div className="space-y-4">
@@ -291,6 +321,7 @@ const ProductDetails = () => {
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
                             <button
+                                onClick={handleAddToCart}
                                 className="btn btn-primary bg-[#543441] hover:bg-[#3d262f] border-none text-white h-14 text-lg"
                                 disabled={!selectedSku || selectedSku.stock === 0}
                             >
